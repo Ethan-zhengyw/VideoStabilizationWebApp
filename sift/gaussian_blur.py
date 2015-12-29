@@ -30,6 +30,9 @@ def detect_local_extrema(pyramid):
     gimg = get_gray_2(img)
     pyramid = create_DOG_pyramid(gimg)
 
+    # t_pry = stub_create_DOG_pyramid()
+    t_pry = stub_create_gaussian_pyramid()
+
     print len(pyramid[0][4]), len(pyramid[0][4][0])
     print len(pyramid[1][4]), len(pyramid[1][4][0])
     print len(pyramid[2][4]), len(pyramid[2][4][0])
@@ -52,12 +55,15 @@ def detect_local_extrema(pyramid):
                 for jj in range(1, w - 1):
                     
                     target = cur[ii][jj]
-                    if abs(target) < 8:
-                        break
-                    else: # TODO target > 0 的问题
+                    if abs(target) > 3:
                         if ((target > cur[ii - 1][jj - 1] and target > cur[ii - 1][jj] and target > cur[ii - 1][jj + 1] and target > cur[ii][jj - 1] and target > cur[ii][jj + 1] and target > cur[ii + 1][jj - 1] and target > cur[ii + 1][jj] and target > cur[ii + 1][jj + 1] and target > pre[ii - 1][jj - 1] and target > pre[ii - 1][jj] and target > pre[ii - 1][jj + 1] and target > pre[ii][jj - 1] and target > pre[ii][jj] and target > pre[ii][jj + 1] and target > pre[ii + 1][jj - 1] and target > pre[ii + 1][jj] and target > pre[ii + 1][jj + 1] and target > nex[ii - 1][jj - 1] and target > nex[ii - 1][jj] and target > nex[ii - 1][jj + 1] and target > nex[ii][jj - 1] and target > nex[ii][jj] and target > nex[ii][jj + 1] and target > nex[ii + 1][jj - 1] and target > nex[ii + 1][jj] and target > nex[ii + 1][jj + 1]) or (target < cur[ii - 1][jj - 1] and target < cur[ii - 1][jj] and target < cur[ii - 1][jj + 1] and target < cur[ii][jj - 1] and target < cur[ii][jj + 1] and target < cur[ii + 1][jj - 1] and target < cur[ii + 1][jj] and target < cur[ii + 1][jj + 1] and target < pre[ii - 1][jj - 1] and target < pre[ii - 1][jj] and target < pre[ii - 1][jj + 1] and target < pre[ii][jj - 1] and target < pre[ii][jj] and target < pre[ii][jj + 1] and target < pre[ii + 1][jj - 1] and target < pre[ii + 1][jj] and target < pre[ii + 1][jj + 1] and target < nex[ii - 1][jj - 1] and target < nex[ii - 1][jj] and target < nex[ii - 1][jj + 1] and target < nex[ii][jj - 1] and target < nex[ii][jj] and target < nex[ii][jj + 1] and target < nex[ii + 1][jj - 1] and target < nex[ii + 1][jj] and target < nex[ii + 1][jj + 1])):
                         # if ((target > 0 and target > cur[ii - 1][jj - 1] and target > cur[ii - 1][jj] and target > cur[ii - 1][jj + 1] and target > cur[ii][jj - 1] and target > cur[ii][jj + 1] and target > cur[ii + 1][jj - 1] and target > cur[ii + 1][jj] and target > cur[ii + 1][jj + 1] and target > pre[ii - 1][jj - 1] and target > pre[ii - 1][jj] and target > pre[ii - 1][jj + 1] and target > pre[ii][jj - 1] and target > pre[ii][jj] and target > pre[ii][jj + 1] and target > pre[ii + 1][jj - 1] and target > pre[ii + 1][jj] and target > pre[ii + 1][jj + 1] and target > nex[ii - 1][jj - 1] and target > nex[ii - 1][jj] and target > nex[ii - 1][jj + 1] and target > nex[ii][jj - 1] and target > nex[ii][jj] and target > nex[ii][jj + 1] and target > nex[ii + 1][jj - 1] and target > nex[ii + 1][jj] and target > nex[ii + 1][jj + 1]) or (target < 0 and target < cur[ii - 1][jj - 1] and target < cur[ii - 1][jj] and target < cur[ii - 1][jj + 1] and target < cur[ii][jj - 1] and target < cur[ii][jj + 1] and target < cur[ii + 1][jj - 1] and target < cur[ii + 1][jj] and target < cur[ii + 1][jj + 1] and target < pre[ii - 1][jj - 1] and target < pre[ii - 1][jj] and target < pre[ii - 1][jj + 1] and target < pre[ii][jj - 1] and target < pre[ii][jj] and target < pre[ii][jj + 1] and target < pre[ii + 1][jj - 1] and target < pre[ii + 1][jj] and target < pre[ii + 1][jj + 1] and target < nex[ii - 1][jj - 1] and target < nex[ii - 1][jj] and target < nex[ii - 1][jj + 1] and target < nex[ii][jj - 1] and target < nex[ii][jj] and target < nex[ii][jj + 1] and target < nex[ii + 1][jj - 1] and target < nex[ii + 1][jj] and target < nex[ii + 1][jj + 1])):
                             kps.append((ii, jj))
+                            for iii in range(ii - 2, ii + 3):
+                                for jjj in range(jj - 2, jj + 3):
+                                    if iii > 0 and jjj > 0 and iii < h and jjj < w:
+                                        t_pry[i][j].putpixel((iii, jjj), (255, 0, 0))
+            t_pry[i][j].save('../images/kps_gaussian/' + str(i) + '_' + str(j) + '.jpg')
             keypoint.append(kps)
         keypoint.append([]) # 差分金字塔最后一层补上
         keypoints.append(keypoint)
@@ -333,7 +339,7 @@ def get_gray_2(img):
 # 
 # img = Image.open('../images/Helene.png')
 # gimg = get_gray_2(img)
-# detect_local_extrema(stub_create_DOG_pyramid())
+detect_local_extrema(stub_create_DOG_pyramid())
 # create_DOG_pyramid(gimg)
 # create_gaussian_pyramid(gimg)
 # 
