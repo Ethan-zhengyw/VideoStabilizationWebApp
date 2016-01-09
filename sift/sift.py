@@ -5,10 +5,6 @@ from PIL import Image, ImageFilter
 import test
 import module as md
 
-# 高斯核函数集合
-# 如果要用到某一标准差下的核函数时集合内不存在的话算出来就添加进该集合
-gauss_cores = {}
-
 
 def detect_local_extrema(pyramid):
     """ 检测局部极值
@@ -23,7 +19,7 @@ def detect_local_extrema(pyramid):
     """
     threshold = 8
 
-    img = Image.open('../images/Helene.png')
+    img = Image.open('../images/Helene/Helene.png')
     gimg = md.get_gray_2(img)
     pyramid = create_DOG_pyramid(gimg)
 
@@ -60,7 +56,7 @@ def detect_local_extrema(pyramid):
                                 for jjj in range(jj - 2, jj + 3):
                                     if iii > 0 and jjj > 0 and iii < h and jjj < w:
                                         t_pry[i][j].putpixel((iii, jjj), (255, 0, 0))
-            t_pry[i][j].save('../images/kps_gaussian/' + str(i) + '_' + str(j) + '.jpg')
+            t_pry[i][j].save('../images/Helene/kps_gaussian/' + str(i) + '_' + str(j) + '.jpg')
             keypoint.append(kps)
         keypoint.append([]) # 差分金字塔最后一层补上
         keypoints.append(keypoint)
@@ -93,7 +89,7 @@ def create_DOG_pyramid(img):
                 img.append(line)
 
             octave.append(img)
-            # dog.save('../images/' + '_' + str(i) + '_' + str(j) + '.jpg')
+            # dog.save('../images/Helene/' + '_' + str(i) + '_' + str(j) + '.jpg')
             
         octaves_.append(octave)
 
@@ -119,13 +115,13 @@ def create_gaussian_pyramid(img):
     # 创建第一组
     # 先将原始图片放大两倍
     img = zoom_in(img)
-    # img.save('../images/Ethan_gray.png')
+    # img.save('../images/Helene/Ethan_gray.png')
 
     octave = []
     for i in range(6):
         print str(i + 1) + '/6...'
         bimg = get_gauss_blur(img, sigmas[0][i])
-        bimg.save('../images/0_' + str(i) + '.jpg')
+        bimg.save('../images/Helene/0_' + str(i) + '.jpg')
         octave.append(bimg)
 
     # 第一组加入金字塔
@@ -145,60 +141,12 @@ def create_gaussian_pyramid(img):
             else:
                 bimg = get_gauss_blur(img, sigmas[i + 1][j])
 
-            # bimg.save('../images/' + str(i + 1) + '_' + str(j) + '.jpg')
+            # bimg.save('../images/Helene/' + str(i + 1) + '_' + str(j) + '.jpg')
             octave.append(bimg)
 
         octaves.append(octave)
 
     return octaves
-
-
-def create_gauss_core(sigma):
-    if sigma in gauss_cores:
-        return gauss_cores[sigma]
-
-    core_size = math.ceil(6 * sigma + 1)
-    r = int(core_size / 2)
-    core_size = 2 * r + 1
-
-    # 初始化高斯模板
-    gauss_core = []
-    for i in range(core_size):
-        gauss_core.append([0] * core_size)
-
-    total = gaussian(sigma, 0, 0)
-
-    # 先算中心
-    gauss_core[r][r] = total
-
-    # 根据中心对称性质计算其余位置
-    for i in range(1, r + 1):
-
-        prob = gaussian(sigma, 0, i)
-        total += 4 * prob
-
-        gauss_core[r][r + i] = prob
-        gauss_core[r][r - i] = prob
-        gauss_core[r + i][r] = prob
-        gauss_core[r - i][r] = prob
-
-        for j in range(1, r + 1):
-
-            prob = gaussian(sigma, i, j)
-            total += 4 * prob
-
-            gauss_core[r + i][r + j] = prob
-            gauss_core[r + i][r - j] = prob
-            gauss_core[r - i][r + j] = prob
-            gauss_core[r - i][r - j] = prob
-
-    for i in range(core_size):
-        for j in range(core_size):
-            gauss_core[i][j] /= total
-
-    gauss_cores[sigma] = gauss_core
-
-    return gauss_core
 
 
 # core = create_gauss_core(0.6)
@@ -207,7 +155,7 @@ def create_gauss_core(sigma):
 #         print core[i][j],
 #     print
 # 
-# img = Image.open('../images/Helene.png')
+# img = Image.open('../images/Helene/Helene.png')
 # gimg = get_gray_2(img)
 detect_local_extrema(test.stub_create_DOG_pyramid())
 # create_DOG_pyramid(gimg)

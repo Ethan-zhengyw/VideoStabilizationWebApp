@@ -10,7 +10,7 @@ def stub_create_DOG_pyramid():
         octave = []
 
         for j in range(5):
-            path = '../images/dog/_' + str(i) + '_' + str(j) + '.jpg'
+            path = '../images/Helene/dog/_' + str(i) + '_' + str(j) + '.jpg'
             octave.append(Image.open(path))
 
         octaves.append(octave)
@@ -26,7 +26,7 @@ def stub_create_gaussian_pyramid():
     for i in range(4):
         octave = []
         for j in range(6):
-            path = '../images/gaussian/' + str(i) + '_' + str(j) + '.jpg'
+            path = '../images/Helene/gaussian/' + str(i) + '_' + str(j) + '.jpg'
             octave.append(Image.open(path))
         octaves.append(octave)
 

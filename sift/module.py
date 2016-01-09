@@ -6,6 +6,11 @@
 import math
 from PIL import Image, ImageFilter
 
+# 高斯核函数集合
+# 如果要用到某一标准差下的核函数时集合内不存在的话算出来就添加进该集合
+gauss_cores = {}
+
+
 def gaussian(sigma, x, y):
     return math.exp(-1.0 * (x*x + y*y) / (2 * sigma * sigma)) \
             / (2.0 * math.pi * sigma * sigma)
@@ -38,6 +43,54 @@ def zoom_out(img):
     return img_
 
 
+def create_gauss_core(sigma):
+    if sigma in gauss_cores:
+        return gauss_cores[sigma]
+
+    core_size = math.ceil(6 * sigma + 1)
+    r = int(core_size / 2)
+    core_size = 2 * r + 1
+
+    # 初始化高斯模板
+    gauss_core = []
+    for i in range(core_size):
+        gauss_core.append([0] * core_size)
+
+    total = gaussian(sigma, 0, 0)
+
+    # 先算中心
+    gauss_core[r][r] = total
+
+    # 根据中心对称性质计算其余位置
+    for i in range(1, r + 1):
+
+        prob = gaussian(sigma, 0, i)
+        total += 4 * prob
+
+        gauss_core[r][r + i] = prob
+        gauss_core[r][r - i] = prob
+        gauss_core[r + i][r] = prob
+        gauss_core[r - i][r] = prob
+
+        for j in range(1, r + 1):
+
+            prob = gaussian(sigma, i, j)
+            total += 4 * prob
+
+            gauss_core[r + i][r + j] = prob
+            gauss_core[r + i][r - j] = prob
+            gauss_core[r - i][r + j] = prob
+            gauss_core[r - i][r - j] = prob
+
+    for i in range(core_size):
+        for j in range(core_size):
+            gauss_core[i][j] /= total
+
+    gauss_cores[sigma] = gauss_core
+
+    return gauss_core
+
+
 def get_gauss_blur(img, sigma):
     """ 标准高斯模糊函数
 
@@ -66,6 +119,7 @@ def get_gauss_blur(img, sigma):
 
     return img_blur
 
+# def get_gauss_blur_cv()
 
 def get_gray_1(img):
     """ 通过RGB三个通道的平均值计算灰度图
