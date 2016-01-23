@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-import math
 from scipy import misc, ndimage
 
 import test
 import numpy as np
 import module as md
 
-sss = 'window'
-typ = 'jpg'
+sss = 'Helene'
+typ = 'png'
+
 
 def detect_local_extrema(pyr_dog):
     """ 检测局部极值
@@ -60,7 +60,7 @@ def detect_local_extrema(pyr_dog):
                                         t_pry[i][j][iii, jjj] = (255, 0, 0)
             misc.imsave('../images/%s/kps_gaussian/' % (sss) + str(i) + '_' + str(j) + '.jpg', t_pry[i][j])
             keypoint.append(kps)
-        keypoint.append([]) # 差分金字塔最后一层补上
+        keypoint.append([])  # 差分金字塔最后一层补上
         keypoints.append(keypoint)
     print keypoints
 
@@ -159,7 +159,7 @@ def create_gaussian_pyramid(img):
 #     print
 # 
 
-img = misc.imread('../images/%s/%s.jpg' % (sss, sss))
+img = misc.imread('../images/%s/%s.%s' % (sss, sss, typ))
 
 print 'transform to gray...'
 gimg = md.get_gray_2(img)
