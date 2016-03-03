@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download Video</title>
+</head>
+<body>
+<div>
+
+{% for href_download in href_downloads %}
+
+    <p><a href="{{ href_download.href }}" download="{{ href_download.download }}">{{ href_download.show }}</a></p>
+
+{% endfor %}
+</div>
+</body>
+</html>
